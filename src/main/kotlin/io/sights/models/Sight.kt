@@ -1,12 +1,17 @@
 package io.sights.models
 
+import org.springframework.data.mongodb.core.index.CompoundIndex
+import org.springframework.data.mongodb.core.index.CompoundIndexes
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.UUID
 
 @Document(collection = "sights")
+@CompoundIndexes(
+    CompoundIndex(name = "sight_idx", def = "{'labels': 1, 'locations': 1}", unique = true)
+)
 data class Sight(
     val id: String = uuid(),
-    val citySdkId: String,
+    val citySdkId: String? = null,
     val base: String,
     val labels: List<Label>,
     val descriptions: List<Description>?,

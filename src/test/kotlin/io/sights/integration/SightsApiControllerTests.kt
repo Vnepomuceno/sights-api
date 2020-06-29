@@ -17,8 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.http.MediaType
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -83,21 +83,26 @@ class SightsApiControllerTests {
             author = Author(id = "authorId", source = "authorSource")
         )
 
-        whenever(sightsRepository.save(argThat<Sight> {
-            this.labels == manageSightPayload.labels &&
-                this.descriptions == manageSightPayload.descriptions &&
-                this.locations == manageSightPayload.locations &&
-                this.websites == manageSightPayload.websites &&
-                this.contact == manageSightPayload.contact &&
-                this.schedules == manageSightPayload.schedules &&
-                this.images == manageSightPayload.images &&
-                this.author == manageSightPayload.author
-        })).thenReturn(sight)
+        whenever(
+            sightsRepository.save(
+                argThat<Sight> {
+                    this.labels == manageSightPayload.labels &&
+                        this.descriptions == manageSightPayload.descriptions &&
+                        this.locations == manageSightPayload.locations &&
+                        this.websites == manageSightPayload.websites &&
+                        this.contact == manageSightPayload.contact &&
+                        this.schedules == manageSightPayload.schedules &&
+                        this.images == manageSightPayload.images &&
+                        this.author == manageSightPayload.author
+                }
+            )
+        ).thenReturn(sight)
 
         mockMvc.perform(
             post("/sights")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(manageSightPayload)))
+                .content(objectMapper.writeValueAsString(manageSightPayload))
+        )
             .andExpect(status().isCreated)
             .andExpect(content().string(sight.id))
     }
@@ -122,24 +127,27 @@ class SightsApiControllerTests {
             }
         """.trimIndent()
 
-        whenever(sightsRepository.save(any<Sight>())).thenReturn(Sight(
-            id = "sightId",
-            citySdkId = "citySdkId",
-            base = "baseUri",
-            labels = listOf(),
-            descriptions = listOf(),
-            locations = listOf(),
-            websites = listOf(),
-            contact = null,
-            schedules = listOf(),
-            images = listOf(),
-            author = Author(id = "authorId", source = "authorSource")
-        ))
+        whenever(sightsRepository.save(any<Sight>())).thenReturn(
+            Sight(
+                id = "sightId",
+                citySdkId = "citySdkId",
+                base = "baseUri",
+                labels = listOf(),
+                descriptions = listOf(),
+                locations = listOf(),
+                websites = listOf(),
+                contact = null,
+                schedules = listOf(),
+                images = listOf(),
+                author = Author(id = "authorId", source = "authorSource")
+            )
+        )
 
         mockMvc.perform(
             post("/sights")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(invalidPayload))
+                .content(invalidPayload)
+        )
             .andExpect(status().isBadRequest)
     }
 }

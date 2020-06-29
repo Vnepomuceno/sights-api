@@ -36,8 +36,7 @@ class SightsApiController(private val sightsRepository: SightsRepository) {
 
 fun ManageSightPayload.toSight() =
     Sight(
-        citySdkId = "",
-        base = "",
+        base = "sights-api",
         labels = this.labels,
         descriptions = this.descriptions,
         locations = this.locations,
