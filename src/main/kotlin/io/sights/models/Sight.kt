@@ -1,12 +1,17 @@
 package io.sights.models
 
+import org.springframework.data.mongodb.core.index.CompoundIndex
+import org.springframework.data.mongodb.core.index.CompoundIndexes
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.UUID
 
-@Document(collection = "Sight")
+@Document(collection = "sights")
+@CompoundIndexes(
+    CompoundIndex(name = "sight_idx", def = "{'labels': 1, 'locations': 1}", unique = true)
+)
 data class Sight(
-    val id: String = newUIID(),
-    val citySdkId: String,
+    val id: String = uuid(),
+    val citySdkId: String? = null,
     val base: String,
     val labels: List<Label>,
     val descriptions: List<Description>?,
@@ -19,20 +24,20 @@ data class Sight(
 )
 
 data class Label(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val term: String,
     val value: String,
     val language: String?
 )
 
 data class Description(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val value: String,
     val lang: String
 )
 
 data class Location(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val address: String,
     val city: String,
     val country: String,
@@ -40,7 +45,7 @@ data class Location(
 )
 
 data class Website(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val href: String,
     val type: String
 )
@@ -51,19 +56,19 @@ data class Contact(
 )
 
 data class Schedule(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val open: String
 )
 
 data class Image(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val href: String,
     val type: String
 )
 
 data class Author(
-    val id: String = newUIID(),
+    val id: String = uuid(),
     val source: String
 )
 
-private fun newUIID() = UUID.randomUUID().toString().replace("-", "")
+private fun uuid() = UUID.randomUUID().toString().replace("-", "")
